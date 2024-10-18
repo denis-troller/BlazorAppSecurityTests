@@ -1,0 +1,12 @@
+﻿@page "/counter2"
+@rendermode InteractiveServer
+
+<h4>Input (encoded)</h4>
+<pre>@Input</pre>
+
+<h4>Input (markup)</h4>
+<pre>@((MarkupString)Input)</pre>
+
+@code {
+    [SupplyParameterFromQuery] private string Input { get; set; } = "";
+}

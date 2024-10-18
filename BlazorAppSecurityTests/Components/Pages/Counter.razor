@@ -24,7 +24,7 @@
 
     protected override Task OnInitializedAsync()
     {
-        if (RuntimeParam != "")
+        if (!string.IsNullOrEmpty(RuntimeParam))
         {
             executeFilter(RuntimeParam);
         }
