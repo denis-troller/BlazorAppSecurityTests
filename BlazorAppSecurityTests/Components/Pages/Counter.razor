@@ -19,15 +19,18 @@
     private int currentCount = 0;
     private string textValue = "empty";
 
-    // protected override Task OnInitializedAsync()
-    // {
-    //     if(textValue != "")
-    //     {
-    //         executeFilter(textValue);
-    //     }
+    [SupplyParameterFromQuery]
+    public string RuntimeParam { get; set; } = "";
 
-    //     return base.OnInitializedAsync();
-    // }
+    protected override Task OnInitializedAsync()
+    {
+        if (RuntimeParam != "")
+        {
+            executeFilter(RuntimeParam);
+        }
+
+        return base.OnInitializedAsync();
+    }
 
     private void IncrementCount()
     {
