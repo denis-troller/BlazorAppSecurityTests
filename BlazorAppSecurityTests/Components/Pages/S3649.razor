@@ -1,4 +1,5 @@
-﻿@page "/counter"
+﻿@page "/S3649/{UserName}"
+@using Microsoft.EntityFrameworkCore
 @rendermode InteractiveServer
 
 <PageTitle>Counter</PageTitle>
@@ -9,24 +10,19 @@
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
-
-<form>
-    <input type="text" @bind="textValue"  @bind:after="() => Refilter()"/>
-    <button>Filter</button>
-</form>
-
 @code {
     private int currentCount = 0;
-    private string textValue = "empty";
+ 
+    private readonly UserDBContext Context;
 
     [SupplyParameterFromQuery]
-    public string RuntimeParam { get; set; } = "";
+    public string UserName { get; set; } = "";
 
     protected override Task OnInitializedAsync()
     {
-        if (!string.IsNullOrEmpty(RuntimeParam))
+        if (!string.IsNullOrEmpty(UserName))
         {
-            executeFilter(RuntimeParam);
+            executeFilter(UserName);
         }
 
         return base.OnInitializedAsync();
@@ -37,13 +33,13 @@
         currentCount++;
     }
 
-    private void Refilter()
-    {
-        executeFilter(textValue);
-    }
-
     private void executeFilter(string? filter)
     {
-        System.Diagnostics.Process.Start($"calc.exe {filter}");
+        var query = "SELECT * FROM users WHERE user = '" + UserName + "'";
+
+        var queryResults = Context
+            .Users
+            .FromSqlRaw(query);
+
     }
 }
