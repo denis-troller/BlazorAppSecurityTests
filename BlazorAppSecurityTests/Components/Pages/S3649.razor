@@ -1,22 +1,21 @@
-﻿@page "/S3649/{UserName}"
+﻿@page "/S3649"
 @using Microsoft.EntityFrameworkCore
 @rendermode InteractiveServer
 
 <PageTitle>Counter</PageTitle>
 
-<h1>Counter</h1>
+<h1>SQL injection</h1>
 
-<p role="status">Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<div>Query being executed:@(query)</div>
 
 @code {
-    private int currentCount = 0;
- 
+
     private readonly UserDBContext Context;
 
     [SupplyParameterFromQuery]
     public string UserName { get; set; } = "";
+
+    private string query = "";
 
     protected override Task OnInitializedAsync()
     {
@@ -28,18 +27,16 @@
         return base.OnInitializedAsync();
     }
 
-    private void IncrementCount()
-    {
-        currentCount++;
-    }
-
     private void executeFilter(string? filter)
     {
-        var query = "SELECT * FROM users WHERE user = '" + UserName + "'";
+        query = "SELECT * FROM users WHERE user = '" + UserName + "'";
 
-        var queryResults = Context
-            .Users
-            .FromSqlRaw(query);
+        if(Context != null)
+        {            
+            var queryResults = Context
+                .Users
+                .FromSqlRaw(query);
+        }
 
     }
 }
