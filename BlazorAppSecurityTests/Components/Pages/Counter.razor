@@ -11,30 +11,35 @@
 
 
 <form>
-    <InputText @bind-Value="textValue"  />
+    <input type="text" @bind="textValue"  @bind:after="() => Refilter()"/>
     <button>Filter</button>
 </form>
 
 @code {
     private int currentCount = 0;
-    private string textValue = "";
+    private string textValue = "empty";
 
-    protected override Task OnInitializedAsync()
-    {
-        if(textValue != "")
-        {
-            executeFilter(textValue);
-        }
+    // protected override Task OnInitializedAsync()
+    // {
+    //     if(textValue != "")
+    //     {
+    //         executeFilter(textValue);
+    //     }
 
-        return base.OnInitializedAsync();
-    }
+    //     return base.OnInitializedAsync();
+    // }
 
     private void IncrementCount()
     {
         currentCount++;
     }
 
-    private void executeFilter(string filter)
+    private void Refilter()
+    {
+        executeFilter(textValue);
+    }
+
+    private void executeFilter(string? filter)
     {
         System.Diagnostics.Process.Start($"calc.exe {filter}");
     }
