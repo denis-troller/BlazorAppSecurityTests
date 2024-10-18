@@ -1,0 +1,132 @@
+﻿@page "/S2076/{TaintedRouteParam}"
+@using Microsoft.Extensions.Logging
+@using System.Diagnostics
+@inject ILogger<S2076> Logger;
+
+<h3>S2076 - OS commands should not be vulnerable to command injection attacks</h3>
+
+<p>Running in: @_context</p>
+
+<div><button class="btn btn-success" @onclick="TestRouteParam">Test Route Parameter</button></div>
+
+<div class="mt-4"><button class="btn btn-secondary" @onclick="TestQueryString">Test Query String</button></div>
+
+<div>
+    <div class="row mt-4">
+        <div class="col-3"><InputTextArea rows="3" @bind-Value="_inputFromComponent" /></div>
+        <div class="col-3"><InputTextArea rows="3" @bind-Value:get="_inputFromComponentSet" @bind-Value:set="BindValueSet" /></div>
+        <div class="col-3"><textarea rows="3" @bind="_inputFromHtml"></textarea></div>
+        <div class="col-3"><textarea rows="3" @bind:get="_inputFromHtmlSet" @bind:set="BindSet"></textarea></div>
+    </div>
+    <div class="row mt-1">
+        <div class="col-3"><button class="btn btn-primary" @onclick="TestBindValue">Test bind-Value</button></div>
+        <div class="col-3"><button class="btn btn-primary" @onclick="TestBindValueSet">Test bind-Value:set</button></div>
+        <div class="col-3"><button class="btn btn-primary" @onclick="TestBind">Test bind</button></div>
+        <div class="col-3"><button class="btn btn-primary" @onclick="TestBindSet">Test bind:set</button></div>
+    </div>
+</div>
+
+<EditForm Model="_model" OnValidSubmit="OnTestFormBinding" FormName="edit-form" class="mt-4">
+    <DataAnnotationsValidator />
+    <InputTextArea rows="3" @bind-Value="_model.Data" /> <button class="btn btn-warning" type="submit">Test Form Binding</button>
+</EditForm>
+
+@code {
+    [Parameter] public string? TaintedRouteParam { get; set; }
+    [SupplyParameterFromQuery] private string? TaintedQueryString { get; set; }
+    
+    private readonly FormModel _model = new();
+    private readonly String _context = OperatingSystem.IsBrowser() ? "Browser" : "Server";
+    private string _inputFromComponent = "";
+    private string _inputFromComponentSet = "";
+    private string _inputFromHtml = "";
+    private string _inputFromHtmlSet = "";
+    
+    protected override void OnInitialized()
+    {
+        Logger.LogInformation("OnInitialized with Route Param");
+        Test(TaintedRouteParam ?? "");
+        Logger.LogInformation("OnInitialized with Query Param");
+        Test(TaintedQueryString ?? "");
+
+        _inputFromComponent = TaintedQueryString ?? "";
+        _inputFromComponentSet = TaintedQueryString ?? "";
+        _inputFromHtml = TaintedQueryString ?? "";
+        _inputFromHtmlSet = TaintedQueryString ?? "";
+        _model.Data = TaintedQueryString ?? "";
+    }
+    
+    private void TestRouteParam()
+    {
+        Logger.LogInformation("Button click with Route Param");
+        Test(TaintedRouteParam ?? "");
+    }
+    
+    private void TestQueryString()
+    {
+        Logger.LogInformation("Button click with Query Param");
+        Test(TaintedQueryString ?? "");
+    }
+    
+    private void TestBindValue()
+    {
+        Logger.LogInformation("Button click with bind-Value");
+        Test(_inputFromComponent);
+    }
+    
+    private void TestBindValueSet()
+    {
+        Logger.LogInformation("Button click with bind-Value:set");
+        Test(_inputFromComponentSet);
+    }
+    
+    private void BindValueSet(string? value)
+    {
+        _inputFromComponentSet = value ?? "";
+    }
+
+    private void BindSet(string? value)
+    {
+        _inputFromHtmlSet = value ?? "";
+    }
+    
+    private void TestBind()
+    {
+        Logger.LogInformation("Button click with bind");
+        Test(_inputFromComponent);
+    }
+    
+    private void TestBindSet()
+    {
+        Logger.LogInformation("Button click with bind:set");
+        Test(_inputFromComponent);
+    }
+    
+    private void OnTestFormBinding()
+    {
+        Logger.LogInformation("Form binding");
+        Test(_model.Data);
+    }
+    
+    private void Test(string value)
+    {
+        try {
+            Process cmd = new Process();
+            cmd.StartInfo.FileName = "/bin/dash";
+            cmd.StartInfo.ArgumentList.Add("-c");
+            cmd.StartInfo.ArgumentList.Add(value); // Noncompliant
+            cmd.StartInfo.CreateNoWindow = true;
+            cmd.StartInfo.UseShellExecute = false;
+            cmd.Start();
+        } 
+        catch (Exception ex)
+        {
+            Logger.LogError(ex.Message);
+        }
+    }
+    
+    private class FormModel
+    {
+        public string Data { get; set; } = "";
+    }
+}
