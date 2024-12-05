@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <adaFruit>aio_XFKJb9078YvbkljV0879vhjkj7G4</adaFruit>
   </PropertyGroup>
 
   <ItemGroup>
