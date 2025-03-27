@@ -266,6 +266,7 @@ dotnet_style_prefer_compound_assignment = true:suggestion
 [*.g.cs]
 dotnet_diagnostic.S1144.severity = none
 dotnet_diagnostic.CS8618.severity = none
+dotnet_diagnostic.CS0169.severity = none
 
 [*.razor]
 dotnet_diagnostic.S1144.severity = none
