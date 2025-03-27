@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <adaFruit>AIzaSyCis4NzxMw1aJyvUIrjGILjPkSdxrRfof4</adaFruit>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,4 +12,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
   </ItemGroup>
 
+<ItemGroup>
+<Content Include="BlazorAppSecurityTests.csproj" />
+</ItemGroup>
 </Project>
