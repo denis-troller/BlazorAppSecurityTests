@@ -270,3 +270,4 @@ dotnet_style_prefer_compound_assignment = true:suggestion
 {*.razor}
 # CS1717: Assignment made to same variable
 dotnet_diagnostic.CS1717.severity = none
+dotnet_diagnostic.S1656.severity = none
