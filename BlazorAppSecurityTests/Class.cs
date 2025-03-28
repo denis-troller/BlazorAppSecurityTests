@@ -14,4 +14,15 @@ namespace BlazorAppSecurityTests
     {
 
     }
-}
+
+      public string MyProp { get; set; } = "";
+
+        private void DoStuff(int a, int b, int c, int d, int e, int f, int g, int h, int j, int k, string myprop)
+        {
+
+            myprop = myprop;
+
+            MyProp = MyProp;
+
+        }
+    }
