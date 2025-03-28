@@ -266,3 +266,6 @@ dotnet_style_prefer_inferred_tuple_names = true:suggestion
 dotnet_style_prefer_inferred_anonymous_type_member_names = true:suggestion
 dotnet_style_prefer_compound_assignment = true:suggestion
 
+{*.razor}
+# CS1717: Assignment made to same variable
+dotnet_diagnostic.CS1717.severity = none
